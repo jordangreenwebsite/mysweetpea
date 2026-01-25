@@ -99,11 +99,11 @@
     }
 
     function supportEntranceAnimations(swiper, settings) {
-      let lastVisibleSlides = swiper.visibleSlides;
+      let lastVisibleSlides = swiper.visibleSlides || [];
       const playOn = settings.advanced.play_animations_on || "transition_end";
 
-      const getNewestSlides = () => swiper.visibleSlides.filter(x => !lastVisibleSlides.includes(x));
-      const getHiddenSlides = () => swiper.slides.filter((slide) => !swiper.visibleSlides.includes(slide));
+      const getNewestSlides = () => swiper.visibleSlides?.filter(x => !lastVisibleSlides.includes(x)) || [];
+      const getHiddenSlides = () => swiper.slides?.filter((slide) => !swiper.visibleSlides.includes(slide)) || [];
 
       // This is a workaround for when the user drags the slider before slideChange is triggered.
       swiper.on("sliderFirstMove", () => {
@@ -327,6 +327,10 @@
           window.swiperInstances &&
           window.swiperInstances[sliderId]
         ) {
+          if (window.swiperInstances[sliderId].visibleSlides.includes(slideElement)) {
+            return;
+          }
+
           window.swiperInstances[sliderId].slideTo(slideIndex, 0);
         }
       }
